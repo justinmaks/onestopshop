@@ -19,12 +19,22 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 
 ## Installation
 
-1. Download or clone this repository
-2. Copy the `OneStopShop` folder to your WoW addons directory:
+### Download Release (Recommended)
+
+1. Go to the [Releases](../../releases) page
+2. Download the latest `OneStopShop-x.x.x.zip`
+3. Extract the zip file
+4. Copy the `OneStopShop` folder to your WoW AddOns directory:
    - **Windows:** `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns\`
    - **macOS:** `/Applications/World of Warcraft/_classic_/Interface/AddOns/`
-3. Restart WoW or type `/reload` if already in-game
-4. Enable the addon in the character select screen if needed
+5. Restart WoW or type `/reload` if already in-game
+
+### Manual Install (from source)
+
+```bash
+git clone https://github.com/justinmaks/onestopshop.git
+cp -r onestopshop/OneStopShop "/path/to/WoW/_classic_/Interface/AddOns/"
+```
 
 ## Usage
 
@@ -90,6 +100,32 @@ This addon is designed to comply with Blizzard's Terms of Service:
 - No fully automated gameplay
 - Chat posting respects rate limits
 - Party invites require manual clicks
+
+## Development
+
+### Local Packaging
+
+```bash
+./package.sh 1.0.0
+# Creates releases/OneStopShop-1.0.0.zip
+```
+
+### Creating a Release
+
+Releases are automated via GitHub Actions. To create a new release:
+
+```bash
+# Update CHANGELOG.md with changes
+git add -A
+git commit -m "chore: prepare release 1.1.0"
+git tag v1.1.0
+git push origin main --tags
+```
+
+The workflow will automatically:
+- Update the version in the TOC file
+- Create the release zip
+- Publish a GitHub Release with install instructions
 
 ## License
 

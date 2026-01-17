@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update TOC version
+        run: |
+          sed -i "s/## Version: .*/## Version: ${{ steps.version.outputs.VERSION }}/" OneStopShop/OneStopShop.toc
+
+      - name: Create release zip
+        run: |
+          zip -r OneStopShop-${{ steps.version.outputs.VERSION }}.zip OneStopShop \
+            -x "*.git*" \
+            -x "*.DS_Store" \
+            -x "*Thumbs.db"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: OneStopShop v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Installation
+
+            1. Download `OneStopShop-${{ steps.version.outputs.VERSION }}.zip`
+            2. Extract the zip file
+            3. Copy the `OneStopShop` folder to your WoW AddOns directory:
+               - **Windows:** `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns\`
+               - **macOS:** `/Applications/World of Warcraft/_classic_/Interface/AddOns/`
+            4. Restart WoW or `/reload`
+
+            ## What's New
+
+            See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+          files: OneStopShop-${{ steps.version.outputs.VERSION }}.zip
+          draft: false
+          prerelease: false
