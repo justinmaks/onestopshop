@@ -20,25 +20,47 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-      - name: Update TOC version
+      - name: Update TOC versions
         run: |
-          sed -i "s/## Version: .*/## Version: ${{ steps.version.outputs.VERSION }}/" OneStopShop/OneStopShop.toc
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          # Update all TOC files
+          for toc in OneStopShop/*.toc; do
+            sed -i "s/## Version: .*/## Version: $VERSION/" "$toc"
+          done
 
-      - name: Create release zip
+      - name: Create Classic Era package
         run: |
-          zip -r OneStopShop-${{ steps.version.outputs.VERSION }}.zip OneStopShop \
-            -x "*.git*" \
-            -x "*.DS_Store" \
-            -x "*Thumbs.db"
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          TEMP_DIR=$(mktemp -d)
+          cp -r OneStopShop "$TEMP_DIR/"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Cata.toc"
+          (cd "$TEMP_DIR" && zip -r "OneStopShop-${VERSION}-classic.zip" OneStopShop -x "*.git*" -x "*.DS_Store")
+          mv "$TEMP_DIR/OneStopShop-${VERSION}-classic.zip" .
+
+      - name: Create Cataclysm Classic package
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          TEMP_DIR=$(mktemp -d)
+          cp -r OneStopShop "$TEMP_DIR/"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Vanilla.toc"
+          (cd "$TEMP_DIR" && zip -r "OneStopShop-${VERSION}-cata.zip" OneStopShop -x "*.git*" -x "*.DS_Store")
+          mv "$TEMP_DIR/OneStopShop-${VERSION}-cata.zip" .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           name: OneStopShop v${{ steps.version.outputs.VERSION }}
           body: |
+            ## Downloads
+
+            | Version | Download |
+            |---------|----------|
+            | **Classic Era** (Vanilla, Season of Discovery, Hardcore, Anniversary) | `OneStopShop-${{ steps.version.outputs.VERSION }}-classic.zip` |
+            | **Cataclysm Classic** | `OneStopShop-${{ steps.version.outputs.VERSION }}-cata.zip` |
+
             ## Installation
 
-            1. Download `OneStopShop-${{ steps.version.outputs.VERSION }}.zip`
+            1. Download the zip for your WoW version above
             2. Extract the zip file
             3. Copy the `OneStopShop` folder to your WoW AddOns directory:
                - **Windows:** `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns\`
@@ -48,6 +70,8 @@ jobs:
             ## What's New
 
             See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
-          files: OneStopShop-${{ steps.version.outputs.VERSION }}.zip
+          files: |
+            OneStopShop-${{ steps.version.outputs.VERSION }}-classic.zip
+            OneStopShop-${{ steps.version.outputs.VERSION }}-cata.zip
           draft: false
           prerelease: false

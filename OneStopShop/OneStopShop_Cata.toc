@@ -1,10 +1,10 @@
-## Interface: 11505
-## Interface-Cata: 40401
+## Interface: 40401
 ## Title: OneStopShop
 ## Notes: Helps Mages and Warlocks sell portals and summons
 ## Author: OneStopShop
 ## Version: 1.0.0
 ## SavedVariablesPerCharacter: OneStopShopDB
+## X-Flavor: Cata
 ## X-Website: https://github.com/justinmaks/onestopshop
 
 Core/Utils.lua

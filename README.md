@@ -13,16 +13,19 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 
 ## Supported Clients
 
-- WoW Classic Era (1.14.x)
-- TBC Classic (2.5.x)
-- WotLK Classic (3.4.x)
+| Version | Download |
+|---------|----------|
+| **Classic Era** (Vanilla, Season of Discovery, Hardcore, Anniversary) | `-classic.zip` |
+| **Cataclysm Classic** | `-cata.zip` |
 
 ## Installation
 
 ### Download Release (Recommended)
 
-1. Go to the [Releases](../../releases) page
-2. Download the latest `OneStopShop-x.x.x.zip`
+1. Go to the [Releases](../../releases/latest) page
+2. Download the zip for your WoW version:
+   - `OneStopShop-x.x.x-classic.zip` - Classic Era, SoD, Hardcore, Anniversary
+   - `OneStopShop-x.x.x-cata.zip` - Cataclysm Classic
 3. Extract the zip file
 4. Copy the `OneStopShop` folder to your WoW AddOns directory:
    - **Windows:** `C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns\`
@@ -35,6 +38,8 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 git clone https://github.com/justinmaks/onestopshop.git
 cp -r onestopshop/OneStopShop "/path/to/WoW/_classic_/Interface/AddOns/"
 ```
+
+> **Note:** The source includes all TOC files, so it works with any Classic version.
 
 ## Usage
 
@@ -107,7 +112,10 @@ This addon is designed to comply with Blizzard's Terms of Service:
 
 ```bash
 ./package.sh 1.0.0
-# Creates releases/OneStopShop-1.0.0.zip
+# Creates:
+#   releases/OneStopShop-1.0.0.zip (universal)
+#   releases/OneStopShop-1.0.0-classic.zip
+#   releases/OneStopShop-1.0.0-cata.zip
 ```
 
 ### Creating a Release
@@ -123,9 +131,9 @@ git push origin main --tags
 ```
 
 The workflow will automatically:
-- Update the version in the TOC file
-- Create the release zip
-- Publish a GitHub Release with install instructions
+- Update the version in all TOC files
+- Create separate zips for each WoW version
+- Publish a GitHub Release with download table
 
 ## License
 
