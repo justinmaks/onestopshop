@@ -1,0 +1,23 @@
+## Interface: 11403
+## Interface-TBC: 20504
+## Interface-Wrath: 30403
+## Title: OneStopShop
+## Notes: Helps Mages and Warlocks sell portals and summons
+## Author: OneStopShop
+## Version: 1.0.0
+## SavedVariablesPerCharacter: OneStopShopDB
+
+Core/Utils.lua
+Core/Config.lua
+Core/Events.lua
+
+Modules/Advertiser.lua
+Modules/BuyerDetector.lua
+Modules/PartyManager.lua
+Modules/ServiceTracker.lua
+Modules/SpellCaster.lua
+
+UI/MainFrame.lua
+UI/ConfigFrame.lua
+
+OneStopShop.lua

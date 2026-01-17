@@ -1,0 +1,21 @@
+# Development tooling - not part of the addon
+.claude/
+openspec/
+AGENTS.md
+CLAUDE.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# Packaged releases
+*.zip
+releases/
