@@ -6,6 +6,7 @@
 # Creates separate packages for each WoW flavor:
 #   - OneStopShop-1.0.0.zip (universal - all TOCs included)
 #   - OneStopShop-1.0.0-classic.zip (Classic Era / Vanilla)
+#   - OneStopShop-1.0.0-tbc.zip (TBC Anniversary)
 #   - OneStopShop-1.0.0-cata.zip (Cataclysm Classic)
 
 set -e
@@ -44,6 +45,7 @@ TEMP_DIR=$(mktemp -d)
 cp -r "$ADDON_NAME" "$TEMP_DIR/"
 
 # Remove other flavor TOCs, keep Vanilla and main
+rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_TBC.toc"
 rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_Cata.toc"
 
 # Create zip
@@ -51,6 +53,26 @@ rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_Cata.toc"
 mv "$TEMP_DIR/$ZIP_CLASSIC" "$OUTPUT_DIR/"
 rm -rf "$TEMP_DIR"
 echo "  Created: $OUTPUT_DIR/$ZIP_CLASSIC"
+
+# ====================
+# TBC Anniversary package
+# ====================
+ZIP_TBC="${ADDON_NAME}-${VERSION}-tbc.zip"
+echo "Creating TBC Anniversary package: $ZIP_TBC"
+
+# Create temp directory
+TEMP_DIR=$(mktemp -d)
+cp -r "$ADDON_NAME" "$TEMP_DIR/"
+
+# Remove other flavor TOCs, keep TBC and main
+rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_Vanilla.toc"
+rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_Cata.toc"
+
+# Create zip
+(cd "$TEMP_DIR" && zip -r "$ZIP_TBC" "$ADDON_NAME" $EXCLUDES)
+mv "$TEMP_DIR/$ZIP_TBC" "$OUTPUT_DIR/"
+rm -rf "$TEMP_DIR"
+echo "  Created: $OUTPUT_DIR/$ZIP_TBC"
 
 # ====================
 # Cataclysm Classic package
@@ -64,6 +86,7 @@ cp -r "$ADDON_NAME" "$TEMP_DIR/"
 
 # Remove other flavor TOCs, keep Cata and main
 rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_Vanilla.toc"
+rm -f "$TEMP_DIR/$ADDON_NAME/${ADDON_NAME}_TBC.toc"
 
 # Create zip
 (cd "$TEMP_DIR" && zip -r "$ZIP_CATA" "$ADDON_NAME" $EXCLUDES)

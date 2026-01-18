@@ -15,7 +15,8 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 
 | Version | Download |
 |---------|----------|
-| **Classic Era** (Vanilla, Season of Discovery, Hardcore, Anniversary) | `-classic.zip` |
+| **Classic Era** (Vanilla, Season of Discovery, Hardcore) | `-classic.zip` |
+| **TBC Anniversary** | `-tbc.zip` |
 | **Cataclysm Classic** | `-cata.zip` |
 
 ## Installation
@@ -24,7 +25,8 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 
 1. Go to the [Releases](../../releases/latest) page
 2. Download the zip for your WoW version:
-   - `OneStopShop-x.x.x-classic.zip` - Classic Era, SoD, Hardcore, Anniversary
+   - `OneStopShop-x.x.x-classic.zip` - Classic Era, SoD, Hardcore
+   - `OneStopShop-x.x.x-tbc.zip` - TBC Anniversary
    - `OneStopShop-x.x.x-cata.zip` - Cataclysm Classic
 3. Extract the zip file
 4. Copy the `OneStopShop` folder to your WoW AddOns directory:
@@ -115,6 +117,7 @@ This addon is designed to comply with Blizzard's Terms of Service:
 # Creates:
 #   releases/OneStopShop-1.0.0.zip (universal)
 #   releases/OneStopShop-1.0.0-classic.zip
+#   releases/OneStopShop-1.0.0-tbc.zip
 #   releases/OneStopShop-1.0.0-cata.zip
 ```
 
@@ -134,6 +137,46 @@ The workflow will automatically:
 - Update the version in all TOC files
 - Create separate zips for each WoW version
 - Publish a GitHub Release with download table
+
+### TOC Files
+
+TOC (Table of Contents) files tell WoW how to load the addon. Each WoW client version requires a specific interface number.
+
+#### Current TOC Files
+
+| File | Client | Interface Version |
+|------|--------|-------------------|
+| `OneStopShop.toc` | Multi-client (main) | 11508, 20505, 40402 |
+| `OneStopShop_Vanilla.toc` | Classic Era | 11508 |
+| `OneStopShop_TBC.toc` | TBC Anniversary | 20505 |
+| `OneStopShop_Cata.toc` | Cataclysm Classic | 40402 |
+
+#### Interface Version Format
+
+The interface number encodes the game version as `ABBCC` where:
+- `A` = major version
+- `BB` = minor version
+- `CC` = patch version
+
+Examples:
+- Classic Era 1.15.8 → `11508`
+- TBC 2.5.5 → `20505`
+- Cata 4.4.2 → `40402`
+
+#### Updating Interface Versions
+
+When Blizzard releases a new patch, update the interface numbers:
+
+1. Find the new version number in-game: `/dump select(4, GetBuildInfo())`
+2. Or check [Warcraft Wiki - TOC format](https://warcraft.wiki.gg/wiki/TOC_format)
+3. Update the relevant `.toc` files
+4. Update `Interface-*` lines in the main `OneStopShop.toc`
+
+#### Adding Support for New Clients
+
+1. Create `OneStopShop_<Flavor>.toc` with the correct interface version
+2. Add `## Interface-<Flavor>: <version>` to main `OneStopShop.toc`
+3. Update `package.sh` and `.github/workflows/release.yml` to build the new package
 
 ## License
 

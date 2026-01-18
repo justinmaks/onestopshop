@@ -1,11 +1,10 @@
-## Interface: 11508
-## Interface-TBC: 20505
-## Interface-Cata: 40402
+## Interface: 20505
 ## Title: OneStopShop
 ## Notes: Helps Mages and Warlocks sell portals and summons
 ## Author: OneStopShop
 ## Version: 1.0.1
 ## SavedVariablesPerCharacter: OneStopShopDB
+## X-Flavor: TBC
 ## X-Website: https://github.com/justinmaks/onestopshop
 
 Core/Utils.lua

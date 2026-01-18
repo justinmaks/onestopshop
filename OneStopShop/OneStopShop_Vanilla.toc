@@ -1,4 +1,4 @@
-## Interface: 11506
+## Interface: 11508
 ## Title: OneStopShop
 ## Notes: Helps Mages and Warlocks sell portals and summons
 ## Author: OneStopShop

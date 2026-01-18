@@ -33,9 +33,20 @@ jobs:
           VERSION="${{ steps.version.outputs.VERSION }}"
           TEMP_DIR=$(mktemp -d)
           cp -r OneStopShop "$TEMP_DIR/"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_TBC.toc"
           rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Cata.toc"
           (cd "$TEMP_DIR" && zip -r "OneStopShop-${VERSION}-classic.zip" OneStopShop -x "*.git*" -x "*.DS_Store")
           mv "$TEMP_DIR/OneStopShop-${VERSION}-classic.zip" .
+
+      - name: Create TBC Anniversary package
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          TEMP_DIR=$(mktemp -d)
+          cp -r OneStopShop "$TEMP_DIR/"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Vanilla.toc"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Cata.toc"
+          (cd "$TEMP_DIR" && zip -r "OneStopShop-${VERSION}-tbc.zip" OneStopShop -x "*.git*" -x "*.DS_Store")
+          mv "$TEMP_DIR/OneStopShop-${VERSION}-tbc.zip" .
 
       - name: Create Cataclysm Classic package
         run: |
@@ -43,6 +54,7 @@ jobs:
           TEMP_DIR=$(mktemp -d)
           cp -r OneStopShop "$TEMP_DIR/"
           rm -f "$TEMP_DIR/OneStopShop/OneStopShop_Vanilla.toc"
+          rm -f "$TEMP_DIR/OneStopShop/OneStopShop_TBC.toc"
           (cd "$TEMP_DIR" && zip -r "OneStopShop-${VERSION}-cata.zip" OneStopShop -x "*.git*" -x "*.DS_Store")
           mv "$TEMP_DIR/OneStopShop-${VERSION}-cata.zip" .
 
@@ -55,7 +67,8 @@ jobs:
 
             | Version | Download |
             |---------|----------|
-            | **Classic Era** (Vanilla, Season of Discovery, Hardcore, Anniversary) | `OneStopShop-${{ steps.version.outputs.VERSION }}-classic.zip` |
+            | **Classic Era** (Vanilla, Season of Discovery, Hardcore) | `OneStopShop-${{ steps.version.outputs.VERSION }}-classic.zip` |
+            | **TBC Anniversary** | `OneStopShop-${{ steps.version.outputs.VERSION }}-tbc.zip` |
             | **Cataclysm Classic** | `OneStopShop-${{ steps.version.outputs.VERSION }}-cata.zip` |
 
             ## Installation
@@ -72,6 +85,7 @@ jobs:
             See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
           files: |
             OneStopShop-${{ steps.version.outputs.VERSION }}-classic.zip
+            OneStopShop-${{ steps.version.outputs.VERSION }}-tbc.zip
             OneStopShop-${{ steps.version.outputs.VERSION }}-cata.zip
           draft: false
           prerelease: false
