@@ -192,8 +192,8 @@ function SpellCaster.Initialize()
         SpellCaster.ScanSpells()
     end)
 
-    -- Rescan on spell learned
-    addon.Events.Register("LEARNED_SPELL_IN_TAB", function()
+    -- Rescan on spell learned (SPELLS_CHANGED works in Classic/TBC/Wrath)
+    addon.Events.Register("SPELLS_CHANGED", function()
         SpellCaster.ScanSpells()
     end)
 
