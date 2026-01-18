@@ -9,11 +9,19 @@ local handlers = {}
 -- Main event frame
 local eventFrame = CreateFrame("Frame")
 
+-- Check if event is a custom addon event (not a WoW event)
+local function IsCustomEvent(event)
+    return event:sub(1, 4) == "OSS_"
+end
+
 -- Register an event handler
 function Events.Register(event, callback)
     if not handlers[event] then
         handlers[event] = {}
-        eventFrame:RegisterEvent(event)
+        -- Only register WoW events with the frame, not custom addon events
+        if not IsCustomEvent(event) then
+            eventFrame:RegisterEvent(event)
+        end
     end
     table.insert(handlers[event], callback)
 end
@@ -31,7 +39,9 @@ function Events.Unregister(event, callback)
 
     if #handlers[event] == 0 then
         handlers[event] = nil
-        eventFrame:UnregisterEvent(event)
+        if not IsCustomEvent(event) then
+            eventFrame:UnregisterEvent(event)
+        end
     end
 end
 
@@ -39,7 +49,9 @@ end
 function Events.UnregisterAll(event)
     if handlers[event] then
         handlers[event] = nil
-        eventFrame:UnregisterEvent(event)
+        if not IsCustomEvent(event) then
+            eventFrame:UnregisterEvent(event)
+        end
     end
 end
 
