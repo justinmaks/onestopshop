@@ -33,8 +33,9 @@ local knownPortals = {}
 local knowsSummon = false
 
 -- Check if player knows a spell
-local function IsSpellKnown(spellId)
-    return IsSpellKnown(spellId) or IsPlayerSpell(spellId)
+local WoW_IsSpellKnown = IsSpellKnown
+local function CheckSpellKnown(spellId)
+    return WoW_IsSpellKnown(spellId) or IsPlayerSpell(spellId)
 end
 
 -- Scan for known portal spells
@@ -46,7 +47,7 @@ function SpellCaster.ScanSpells()
 
     if addon.playerClass == "MAGE" then
         for _, spell in ipairs(PORTAL_SPELLS) do
-            if IsSpellKnown(spell.id) then
+            if CheckSpellKnown(spell.id) then
                 if spell.faction == "Both" or spell.faction == playerFaction then
                     table.insert(knownPortals, {
                         name = spell.name,
@@ -57,7 +58,7 @@ function SpellCaster.ScanSpells()
             end
         end
     elseif addon.playerClass == "WARLOCK" then
-        if IsSpellKnown(SUMMON_SPELL.id) then
+        if CheckSpellKnown(SUMMON_SPELL.id) then
             knowsSummon = true
         end
     end
