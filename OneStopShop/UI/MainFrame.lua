@@ -23,6 +23,10 @@ local function CreateMainFrame()
         addon.Config.Set("ui.mainFramePosition", { point = point, relPoint = relPoint, x = x, y = y })
     end)
 
+    -- Make resizable
+    f:SetResizable(true)
+    f:SetResizeBounds(280, 350, 500, 600)
+
     -- Backdrop
     f:SetBackdrop({
         bgFile = "Interface/Tooltips/UI-Tooltip-Background",
@@ -167,6 +171,20 @@ local function CreateMainFrame()
     local credit = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     credit:SetPoint("BOTTOM", 0, 12)
     credit:SetText("Made by Stin")
+
+    -- Resize grip
+    local resizeBtn = CreateFrame("Button", nil, f)
+    resizeBtn:SetSize(16, 16)
+    resizeBtn:SetPoint("BOTTOMRIGHT", -2, 2)
+    resizeBtn:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resizeBtn:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    resizeBtn:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    resizeBtn:SetScript("OnMouseDown", function(self)
+        f:StartSizing("BOTTOMRIGHT")
+    end)
+    resizeBtn:SetScript("OnMouseUp", function(self)
+        f:StopMovingOrSizing()
+    end)
 
     f:Hide()
     return f
