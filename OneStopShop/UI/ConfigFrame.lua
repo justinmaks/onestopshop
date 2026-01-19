@@ -56,6 +56,10 @@ local function CreateConfigFrame()
     f:SetScript("OnDragStart", f.StartMoving)
     f:SetScript("OnDragStop", f.StopMovingOrSizing)
 
+    -- Make resizable
+    f:SetResizable(true)
+    f:SetResizeBounds(350, 400, 600, 600)
+
     -- Backdrop
     f:SetBackdrop({
         bgFile = "Interface/Tooltips/UI-Tooltip-Background",
@@ -185,6 +189,25 @@ local function CreateConfigFrame()
             hideOnEscape = true,
         }
         StaticPopup_Show("OSS_RESET_CONFIRM")
+    end)
+
+    -- Credit text
+    local credit = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    credit:SetPoint("BOTTOMLEFT", 15, 18)
+    credit:SetText("Made by Stin")
+
+    -- Resize grip
+    local resizeBtn = CreateFrame("Button", nil, f)
+    resizeBtn:SetSize(16, 16)
+    resizeBtn:SetPoint("BOTTOMRIGHT", -2, 2)
+    resizeBtn:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resizeBtn:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    resizeBtn:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    resizeBtn:SetScript("OnMouseDown", function(self)
+        f:StartSizing("BOTTOMRIGHT")
+    end)
+    resizeBtn:SetScript("OnMouseUp", function(self)
+        f:StopMovingOrSizing()
     end)
 
     f:Hide()

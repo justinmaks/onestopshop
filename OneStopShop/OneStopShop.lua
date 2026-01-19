@@ -172,7 +172,7 @@ local function Initialize()
     end
 
     -- Print welcome message
-    addon.Utils.Print("v" .. addon.version .. " loaded. Type /oss for commands.")
+    addon.Utils.Print("v" .. addon.version .. " loaded. Type /oss for commands. Made by Stin.")
 
     -- Show class warning for non-mage/warlock
     if addon.playerClass ~= "MAGE" and addon.playerClass ~= "WARLOCK" then

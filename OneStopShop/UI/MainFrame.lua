@@ -163,6 +163,11 @@ local function CreateMainFrame()
         MainFrame.ShowLogDialog()
     end)
 
+    -- Credit text
+    local credit = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    credit:SetPoint("BOTTOM", 0, 12)
+    credit:SetText("Made by Stin")
+
     f:Hide()
     return f
 end
