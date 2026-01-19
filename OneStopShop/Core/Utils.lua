@@ -103,7 +103,9 @@ function Utils.Split(str, delimiter)
     if not str then return result end
 
     delimiter = delimiter or ","
-    for match in (str .. delimiter):gmatch("(.-)" .. delimiter) do
+    -- Escape pattern special characters in delimiter
+    local escapedDelim = delimiter:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+    for match in (str .. delimiter):gmatch("(.-)" .. escapedDelim) do
         local trimmed = Utils.Trim(match)
         if trimmed ~= "" then
             table.insert(result, trimmed)
