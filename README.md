@@ -2,6 +2,8 @@
 
 A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and summons.
 
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange)](https://legacy.curseforge.com/wow/addons/onestopshop)
+
 ## Features
 
 - **Trade Chat Advertising** - Automatically post customizable WTS messages at configurable intervals with rate limit protection
@@ -22,6 +24,12 @@ A World of Warcraft Classic addon that helps Mages and Warlocks sell portals and
 ## Installation
 
 ### Download Release (Recommended)
+
+Download from either:
+- **[CurseForge](https://legacy.curseforge.com/wow/addons/onestopshop)** - Recommended for automatic updates via CurseForge app
+- **[GitHub Releases](../../releases/latest)** - Manual download
+
+#### Manual Installation from GitHub:
 
 1. Go to the [Releases](../../releases/latest) page
 2. Download the zip for your WoW version:

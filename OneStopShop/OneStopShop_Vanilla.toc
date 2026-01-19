@@ -6,6 +6,8 @@
 ## SavedVariablesPerCharacter: OneStopShopDB
 ## X-Flavor: Vanilla
 ## X-Website: https://github.com/justinmaks/onestopshop
+## X-Curse-Project-ID: onestopshop
+## X-CurseForge: https://legacy.curseforge.com/wow/addons/onestopshop
 
 Core/Localization.lua
 Core/Utils.lua
