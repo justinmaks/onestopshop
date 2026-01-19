@@ -5,8 +5,22 @@ local ConfigFrame = addon.ConfigFrame
 
 local frame = nil
 
--- Create a labeled input box
-local function CreateInputBox(parent, label, width, initialValue)
+-- Helper to add tooltip to a frame
+local function AddTooltip(frame, tooltipText)
+    if not tooltipText then return end
+    frame:EnableMouse(true)
+    frame:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(tooltipText, 1, 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+end
+
+-- Create a labeled input box with optional tooltip
+local function CreateInputBox(parent, label, width, initialValue, tooltip)
     local container = CreateFrame("Frame", nil, parent)
     container:SetSize(width + 100, 25)
 
@@ -25,13 +39,19 @@ local function CreateInputBox(parent, label, width, initialValue)
     editBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 
     container.editBox = editBox
+
+    -- Add tooltip
+    if tooltip then
+        AddTooltip(container, tooltip)
+    end
+
     return container
 end
 
--- Create a labeled checkbox
-local function CreateCheckbox(parent, label, initialValue)
+-- Create a labeled checkbox with optional tooltip
+local function CreateCheckbox(parent, label, initialValue, tooltip)
     local container = CreateFrame("Frame", nil, parent)
-    container:SetSize(200, 25)
+    container:SetSize(250, 25)
 
     local checkbox = CreateFrame("CheckButton", nil, container, "UICheckButtonTemplate")
     checkbox:SetPoint("LEFT", 0, 0)
@@ -42,11 +62,19 @@ local function CreateCheckbox(parent, label, initialValue)
     labelText:SetText(label)
 
     container.checkbox = checkbox
+
+    -- Add tooltip
+    if tooltip then
+        AddTooltip(container, tooltip)
+    end
+
     return container
 end
 
 -- Create the config frame
 local function CreateConfigFrame()
+    local L = addon.L
+
     local f = CreateFrame("Frame", "OneStopShopConfigFrame", UIParent, "BackdropTemplate")
     f:SetSize(400, 450)
     f:SetPoint("CENTER")
@@ -73,7 +101,7 @@ local function CreateConfigFrame()
     -- Title
     local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("TOP", 0, -10)
-    title:SetText("OneStopShop Settings")
+    title:SetText(L["SETTINGS_TITLE"])
 
     -- Close button
     local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
@@ -84,20 +112,23 @@ local function CreateConfigFrame()
     -- == Advertising Section ==
     local advHeader = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     advHeader:SetPoint("TOPLEFT", 15, yOffset)
-    advHeader:SetText("|cff00ff00Advertising|r")
+    advHeader:SetText(L["CFG_ADVERTISING"])
     yOffset = yOffset - 25
 
-    local intervalInput = CreateInputBox(f, "Interval (sec):", 60, tostring(addon.Config.Get("advertising.interval") or 60))
+    local intervalInput = CreateInputBox(f, L["CFG_INTERVAL"], 60,
+        tostring(addon.Config.Get("advertising.interval") or 60), L["TIP_INTERVAL"])
     intervalInput:SetPoint("TOPLEFT", 15, yOffset)
     f.intervalInput = intervalInput
     yOffset = yOffset - 30
 
-    local mageTemplateInput = CreateInputBox(f, "Mage Ad:", 200, addon.Config.Get("advertising.mageTemplate") or "")
+    local mageTemplateInput = CreateInputBox(f, L["CFG_MAGE_AD"], 200,
+        addon.Config.Get("advertising.mageTemplate") or "", L["TIP_MAGE_AD"])
     mageTemplateInput:SetPoint("TOPLEFT", 15, yOffset)
     f.mageTemplateInput = mageTemplateInput
     yOffset = yOffset - 30
 
-    local warlockTemplateInput = CreateInputBox(f, "Warlock Ad:", 200, addon.Config.Get("advertising.warlockTemplate") or "")
+    local warlockTemplateInput = CreateInputBox(f, L["CFG_WARLOCK_AD"], 200,
+        addon.Config.Get("advertising.warlockTemplate") or "", L["TIP_WARLOCK_AD"])
     warlockTemplateInput:SetPoint("TOPLEFT", 15, yOffset)
     f.warlockTemplateInput = warlockTemplateInput
     yOffset = yOffset - 35
@@ -105,14 +136,16 @@ local function CreateConfigFrame()
     -- == Prices Section ==
     local priceHeader = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     priceHeader:SetPoint("TOPLEFT", 15, yOffset)
-    priceHeader:SetText("|cff00ff00Prices (gold)|r")
+    priceHeader:SetText(L["CFG_PRICES"])
     yOffset = yOffset - 25
 
-    local portalPriceInput = CreateInputBox(f, "Portal:", 60, tostring(addon.Config.Get("prices.portal") or 2))
+    local portalPriceInput = CreateInputBox(f, L["CFG_PORTAL_PRICE"], 60,
+        tostring(addon.Config.Get("prices.portal") or 2), L["TIP_PORTAL_PRICE"])
     portalPriceInput:SetPoint("TOPLEFT", 15, yOffset)
     f.portalPriceInput = portalPriceInput
 
-    local summonPriceInput = CreateInputBox(f, "Summon:", 60, tostring(addon.Config.Get("prices.summon") or 3))
+    local summonPriceInput = CreateInputBox(f, L["CFG_SUMMON_PRICE"], 60,
+        tostring(addon.Config.Get("prices.summon") or 3), L["TIP_SUMMON_PRICE"])
     summonPriceInput:SetPoint("TOPLEFT", 200, yOffset)
     f.summonPriceInput = summonPriceInput
     yOffset = yOffset - 35
@@ -120,15 +153,17 @@ local function CreateConfigFrame()
     -- == Detection Section ==
     local detectHeader = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     detectHeader:SetPoint("TOPLEFT", 15, yOffset)
-    detectHeader:SetText("|cff00ff00Buyer Detection|r")
+    detectHeader:SetText(L["CFG_DETECTION"])
     yOffset = yOffset - 25
 
-    local detectionEnabled = CreateCheckbox(f, "Enable detection", addon.Config.Get("detection.enabled") ~= false)
+    local detectionEnabled = CreateCheckbox(f, L["CFG_DETECTION_ENABLED"],
+        addon.Config.Get("detection.enabled") ~= false, L["TIP_DETECTION_ENABLED"])
     detectionEnabled:SetPoint("TOPLEFT", 15, yOffset)
     f.detectionEnabled = detectionEnabled
     yOffset = yOffset - 25
 
-    local soundEnabled = CreateCheckbox(f, "Play sound on detection", addon.Config.Get("detection.soundEnabled") ~= false)
+    local soundEnabled = CreateCheckbox(f, L["CFG_SOUND_ENABLED"],
+        addon.Config.Get("detection.soundEnabled") ~= false, L["TIP_SOUND_ENABLED"])
     soundEnabled:SetPoint("TOPLEFT", 15, yOffset)
     f.soundEnabled = soundEnabled
     yOffset = yOffset - 35
@@ -136,25 +171,29 @@ local function CreateConfigFrame()
     -- == Party Section ==
     local partyHeader = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     partyHeader:SetPoint("TOPLEFT", 15, yOffset)
-    partyHeader:SetText("|cff00ff00Party Management|r")
+    partyHeader:SetText(L["CFG_PARTY"])
     yOffset = yOffset - 25
 
-    local autoKick = CreateCheckbox(f, "Auto-kick after service", addon.Config.Get("party.autoKick") or false)
+    local autoKick = CreateCheckbox(f, L["CFG_AUTO_KICK"],
+        addon.Config.Get("party.autoKick") or false, L["TIP_AUTO_KICK"])
     autoKick:SetPoint("TOPLEFT", 15, yOffset)
     f.autoKick = autoKick
     yOffset = yOffset - 25
 
-    local kickDelayInput = CreateInputBox(f, "Kick delay (sec):", 60, tostring(addon.Config.Get("party.autoKickDelay") or 10))
+    local kickDelayInput = CreateInputBox(f, L["CFG_KICK_DELAY"], 60,
+        tostring(addon.Config.Get("party.autoKickDelay") or 10), L["TIP_KICK_DELAY"])
     kickDelayInput:SetPoint("TOPLEFT", 15, yOffset)
     f.kickDelayInput = kickDelayInput
     yOffset = yOffset - 30
 
-    local whisperOnInvite = CreateCheckbox(f, "Whisper on invite", addon.Config.Get("party.whisperOnInvite") ~= false)
+    local whisperOnInvite = CreateCheckbox(f, L["CFG_WHISPER_INVITE"],
+        addon.Config.Get("party.whisperOnInvite") ~= false, L["TIP_WHISPER_INVITE"])
     whisperOnInvite:SetPoint("TOPLEFT", 15, yOffset)
     f.whisperOnInvite = whisperOnInvite
     yOffset = yOffset - 25
 
-    local inviteWhisperInput = CreateInputBox(f, "Invite msg:", 180, addon.Config.Get("party.inviteWhisper") or "")
+    local inviteWhisperInput = CreateInputBox(f, L["CFG_INVITE_MSG"], 180,
+        addon.Config.Get("party.inviteWhisper") or "", L["TIP_INVITE_MSG"])
     inviteWhisperInput:SetPoint("TOPLEFT", 15, yOffset)
     f.inviteWhisperInput = inviteWhisperInput
     yOffset = yOffset - 40
@@ -163,26 +202,26 @@ local function CreateConfigFrame()
     local saveBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     saveBtn:SetSize(80, 25)
     saveBtn:SetPoint("BOTTOMRIGHT", -15, 15)
-    saveBtn:SetText("Save")
+    saveBtn:SetText(L["BTN_SAVE"])
     saveBtn:SetScript("OnClick", function()
         ConfigFrame.Save()
-        addon.Utils.Print("Settings saved.")
+        addon.Utils.Print(L["SETTINGS_SAVED"])
     end)
 
     -- Reset button
     local resetBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     resetBtn:SetSize(80, 25)
     resetBtn:SetPoint("RIGHT", saveBtn, "LEFT", -10, 0)
-    resetBtn:SetText("Reset")
+    resetBtn:SetText(L["BTN_RESET"])
     resetBtn:SetScript("OnClick", function()
         StaticPopupDialogs["OSS_RESET_CONFIRM"] = {
-            text = "Reset all settings to defaults?",
-            button1 = "Yes",
-            button2 = "No",
+            text = L["RESET_CONFIRM"],
+            button1 = L["BTN_YES"],
+            button2 = L["BTN_NO"],
             OnAccept = function()
                 addon.Config.Reset()
                 ConfigFrame.Refresh()
-                addon.Utils.Print("Settings reset to defaults.")
+                addon.Utils.Print(L["SETTINGS_RESET"])
             end,
             timeout = 0,
             whileDead = true,
@@ -194,7 +233,7 @@ local function CreateConfigFrame()
     -- Credit text
     local credit = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     credit:SetPoint("BOTTOMLEFT", 15, 18)
-    credit:SetText("Made by Stin")
+    credit:SetText(L["MADE_BY"])
 
     -- Resize grip
     local resizeBtn = CreateFrame("Button", nil, f)
