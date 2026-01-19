@@ -181,3 +181,35 @@ When Blizzard releases a new patch, update the interface numbers:
 ## License
 
 MIT
+
+
+
+## TODO
+
+  Distribution & Discovery                                                                                       
+  - Upload to CurseForge/WoWInterface - the main addon platforms where players find addons                       
+  - Add a proper README.md with screenshots, feature list, and installation instructions                         
+  - Create a logo/icon for the addon                                                                             
+                                                                                                                 
+  Code Quality                                                                                                   
+  - Add a TOC file version check that warns users if they're running an outdated client                          
+  - Add localization support (L["string"]) for translations - even if only English now, the structure helps later
+  - Add saved variable versioning to handle config migrations between updates                                    
+                                                                                                                 
+  User Experience                                                                                                
+  - Add /oss version command to show current version                                                             
+  - Add a first-run welcome/setup wizard for new users                                                           
+  - Add tooltip help text on config options explaining what each setting does                                    
+  - Consider adding LibDBIcon for a more standard minimap button that works with minimap button managers         
+  - Add a changelog that shows on first load after update                                                        
+                                                                                                                 
+  Polish                                                                                                         
+  - Add sound feedback options (different sounds for different events)                                           
+  - Add a "test" button in config to preview ad messages without posting                                         
+  - Consider keyboard shortcuts for common actions                                                               
+  - Add right-click context menus on buyer names (whisper, ignore, etc.)                                         
+                                                                                                                 
+  Community                                                                                                      
+  - Add a Discord link for support                                                                               
+  - Create a GitHub wiki with documentation                                                                      
+  - Add issue templates for bug reports and feature requests (you have some already)
