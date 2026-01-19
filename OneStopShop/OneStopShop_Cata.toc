@@ -1,12 +1,15 @@
 ## Interface: 40402
 ## Title: OneStopShop
 ## Notes: Helps Mages and Warlocks sell portals and summons
-## Author: OneStopShop
-## Version: 1.0.1
+## Author: Stin
+## Version: 1.0.8
 ## SavedVariablesPerCharacter: OneStopShopDB
 ## X-Flavor: Cata
 ## X-Website: https://github.com/justinmaks/onestopshop
+## X-Curse-Project-ID: onestopshop
+## X-CurseForge: https://legacy.curseforge.com/wow/addons/onestopshop
 
+Core/Localization.lua
 Core/Utils.lua
 Core/Config.lua
 Core/Events.lua

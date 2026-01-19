@@ -203,6 +203,42 @@ local function UpdateAdvertisingStatus()
     end
 end
 
+-- Show context menu for buyer
+local function ShowBuyerContextMenu(buyerName)
+    local L = addon.L
+
+    -- Create dropdown menu
+    local menu = {
+        { text = buyerName, isTitle = true, notCheckable = true },
+        { text = L["MENU_WHISPER"], notCheckable = true, func = function()
+            ChatFrame_OpenChat("/w " .. buyerName .. " ")
+        end },
+        { text = L["MENU_INVITE"], notCheckable = true, func = function()
+            addon.PartyManager.Invite(buyerName)
+            UpdateBuyerQueue()
+        end },
+        { text = L["MENU_WHO"], notCheckable = true, func = function()
+            SendWho("n-" .. buyerName)
+        end },
+        { text = "", notCheckable = true, disabled = true }, -- Separator
+        { text = L["MENU_REMOVE"], notCheckable = true, func = function()
+            addon.BuyerDetector.RemoveBuyer(buyerName)
+            UpdateBuyerQueue()
+        end },
+        { text = L["MENU_IGNORE"], notCheckable = true, func = function()
+            AddIgnore(buyerName)
+            addon.BuyerDetector.RemoveBuyer(buyerName)
+            UpdateBuyerQueue()
+        end },
+    }
+
+    -- Use EasyMenu if available, otherwise create simple dropdown
+    if EasyMenu then
+        local menuFrame = CreateFrame("Frame", "OneStopShopBuyerMenu", UIParent, "UIDropDownMenuTemplate")
+        EasyMenu(menu, menuFrame, "cursor", 0, 0, "MENU")
+    end
+end
+
 -- Update buyer queue display
 local function UpdateBuyerQueue()
     if not frame then return end
@@ -215,6 +251,7 @@ local function UpdateBuyerQueue()
     buyerButtons = {}
 
     local queue = addon.BuyerDetector.GetQueue()
+    local L = addon.L
 
     if #queue == 0 then
         frame.noBuyers:Show()
@@ -227,9 +264,16 @@ local function UpdateBuyerQueue()
     for i, buyer in ipairs(queue) do
         if i > 5 then break end -- Show max 5
 
-        local row = CreateFrame("Frame", nil, frame.buyerContent)
+        local row = CreateFrame("Button", nil, frame.buyerContent)
         row:SetSize(250, 20)
         row:SetPoint("TOPLEFT", 0, -yOffset)
+        row:EnableMouse(true)
+        row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+        -- Highlight on hover
+        local highlight = row:CreateTexture(nil, "HIGHLIGHT")
+        highlight:SetAllPoints()
+        highlight:SetColorTexture(1, 1, 1, 0.1)
 
         local nameText = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
         nameText:SetPoint("LEFT", 0, 0)
@@ -246,13 +290,33 @@ local function UpdateBuyerQueue()
         local inviteBtn = CreateFrame("Button", nil, row, "UIPanelButtonTemplate")
         inviteBtn:SetSize(50, 18)
         inviteBtn:SetPoint("RIGHT", 0, 0)
-        inviteBtn:SetText(buyer.invited and "Sent" or "Invite")
+        inviteBtn:SetText(buyer.invited and L["BTN_SENT"] or L["BTN_INVITE"])
         if buyer.invited then
             inviteBtn:Disable()
         end
         inviteBtn:SetScript("OnClick", function()
             addon.PartyManager.Invite(buyer.name)
             UpdateBuyerQueue()
+        end)
+
+        -- Right-click context menu
+        row:SetScript("OnClick", function(self, button)
+            if button == "RightButton" then
+                ShowBuyerContextMenu(buyer.name)
+            end
+        end)
+
+        -- Tooltip with full message
+        row:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText(buyer.name, 1, 1, 1)
+            GameTooltip:AddLine(buyer.message, 0.8, 0.8, 0.8, true)
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine("Right-click for options", 0.5, 0.5, 0.5)
+            GameTooltip:Show()
+        end)
+        row:SetScript("OnLeave", function()
+            GameTooltip:Hide()
         end)
 
         table.insert(buyerButtons, row)
